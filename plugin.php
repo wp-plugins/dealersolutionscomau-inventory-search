@@ -14,7 +14,7 @@ License: GPL
   function wp_plugin_dealersolutionsinventorysearch_activation()
   {
   	global $wpdb;
-  	$whatToBuild = func_get_args();
+  	$whatToBuild = array_filter(func_get_args());
   	if(empty($whatToBuild) === true or is_array($whatToBuild) === false)
       $whatToBuild = array('database','option');
     if(is_array($whatToBuild) === true)
@@ -46,11 +46,13 @@ License: GPL
             // 2 = Append
             // 3 = Pre-Pend
             // 4 = Replace (Complete)
-            add_option('wp_plugin_dealersolutionsinventorysearch_title_mode',NULL);
+            add_option('wp_plugin_dealersolutionsinventorysearch_title_mode','4');
             // Place to keep some admin alerts
             add_option('wp_plugin_dealersolutionsinventorysearch_admin_notices',json_encode(false));
             // Legacy URL redirect Mode /view.php/searchdef/ becomes /permalink/view/
             add_option('wp_plugin_dealersolutionsinventorysearch_legacy_url_redirect',false);
+            // Place to keep page specific configuration
+            add_option('wp_plugin_dealersolutionsinventorysearch_page_specific_rules','[]');
             break;
           case 'database':
             // Table to store linking mechanism between Page ID and Search Alias
@@ -97,6 +99,7 @@ License: GPL
     delete_option('wp_plugin_dealersolutionsinventorysearch_title_mode');
     delete_option('wp_plugin_dealersolutionsinventorysearch_admin_notices');
     delete_option('wp_plugin_dealersolutionsinventorysearch_legacy_url_redirect');
+    delete_option('wp_plugin_dealersolutionsinventorysearch_page_specific_rules');
     $sql = 'DROP TABLE `' . $wpdb->prefix . 'plugin_dealersolutionsinventorysearch_page_settings`';
     $wpdb->query($sql);
     $sql = 'DROP TABLE `' . $wpdb->prefix . 'plugin_dealersolutionsinventorysearch_error_log`';

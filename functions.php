@@ -377,3 +377,83 @@
       return null;
     }
   }
+
+  function wp_plugin_dealersolutionsinventorysearch_get_specific_page_list_configuration($source = false)
+  {
+
+    $specific_page_list = array(
+      array(
+        'page_name'=>'Search', // Key
+        'page_alias'=>'search',
+        'title_mode'=>null
+      ),
+      array(
+        'page_name'=>'List', // Key
+        'page_alias'=>'list',
+        'title_mode'=>null
+      ),
+      array(
+        'page_name'=>'Detail', // Key
+        'page_alias'=>'view',
+        'title_mode'=>null
+      ),
+      array(
+        'page_name'=>'Category', // Key
+        'url_pattern'=>'%/category=[^/]+/%',
+        'title_mode'=>null
+      )
+    );
+
+    $page_specific_rules = (empty($source) === false and is_array($source) === true) ? $source : json_decode(get_option('wp_plugin_dealersolutionsinventorysearch_page_specific_rules'),true);
+
+    if(empty($page_specific_rules) === false)
+    {
+      foreach($page_specific_rules as $outerKey => $outerValue)
+      {
+        foreach($specific_page_list as $innerKey => $innerValue)
+        {
+          if(strtolower($innerValue['page_name']) === strtolower($outerValue['page_name']))
+          {
+            // overlay the title mode
+            $specific_page_list[$innerKey]['title_mode'] = $outerValue['title_mode'];
+          }
+        }
+      }
+    }
+
+    return $specific_page_list;
+
+  }
+
+  function wp_plugin_dealersolutionsinventorysearch_get_page_title_mode()
+  {
+    include('global.php');
+    $specific_page_list = wp_plugin_dealersolutionsinventorysearch_get_specific_page_list_configuration();
+    if($IS->response->information->page === 'index')
+    {
+      $page_alias = (isset($IS->response->information->defaultindexpage) === true) ? $IS->response->information->defaultindexpage : 'search';
+    }
+    else
+    {
+      $page_alias = $IS->response->information->page;
+    }
+    // First Attempt via url_pattern
+    $current = parse_url('http://'.$_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"]);
+    foreach($specific_page_list as $page)
+    {
+      if(isset($current['path'],$page['url_pattern'],$page['title_mode']) === true and preg_match($page['url_pattern'],$current['path']))
+      {
+        return (strlen($page['title_mode']) === 0) ? $IS->configuration->title_mode : $page['title_mode'];
+        break;
+      }
+    }
+    // Second Attempt via page alias
+    foreach($specific_page_list as $page)
+    {
+      if(isset($page['page_alias'],$page['title_mode']) === true and $page['page_alias'] === $page_alias)
+      {
+        return (strlen($page['title_mode']) === 0) ? $IS->configuration->title_mode : $page['title_mode'];
+      }
+    }
+    return $IS->configuration->title_mode;
+  }

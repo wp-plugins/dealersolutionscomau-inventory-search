@@ -590,7 +590,8 @@
 
     if(isset($wp_plugin_dealersolutionsinventorysearch->response->html->title) === true and $inventory_title = strip_tags($wp_plugin_dealersolutionsinventorysearch->response->html->title) and empty($inventory_title) === false)
     {
-      switch($wp_plugin_dealersolutionsinventorysearch->configuration->title_mode)
+
+      switch(wp_plugin_dealersolutionsinventorysearch_get_page_title_mode())
       {
         case '1': // replace
           $title = str_replace(get_the_title(),$inventory_title,$title);

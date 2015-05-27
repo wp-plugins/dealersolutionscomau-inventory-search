@@ -35,6 +35,10 @@ if($_SERVER['REQUEST_METHOD'] === 'POST' and isset($_POST['wp_plugin_dealersolut
   {
     $update_count++;
   }
+  if(isset($_POST['wp_plugin_dealersolutionsinventorysearch']['page_specific_rules']) and update_option('wp_plugin_dealersolutionsinventorysearch_page_specific_rules',json_encode(wp_plugin_dealersolutionsinventorysearch_get_specific_page_list_configuration($_POST['wp_plugin_dealersolutionsinventorysearch']['page_specific_rules']))))
+  {
+    $update_count++;
+  }
   if(isset($_POST['wp_plugin_dealersolutionsinventorysearch']['legacy_url_redirect']) and update_option('wp_plugin_dealersolutionsinventorysearch_legacy_url_redirect',trim($_POST['wp_plugin_dealersolutionsinventorysearch']['legacy_url_redirect'],'/')))
   {
     $update_count++;
@@ -336,12 +340,10 @@ if(isset($configuration_pagelist))
           <span class="description">Default <code><?php echo $_SERVER['HTTP_HOST'];?></code></span>
         </td>
       </tr>
-      <?php if(get_option('wp_plugin_dealersolutionsinventorysearch_css_mode') != true OR get_option('wp_plugin_dealersolutionsinventorysearch_title_mode') != true OR get_option('wp_plugin_dealersolutionsinventorysearch_legacy_url_redirect') != true OR get_option('wp_plugin_dealersolutionsinventorysearch_development_mode') != true){?>
       <tr valign="top" id="wp_plugin_dealersolutionsinventorysearch_advanced.container">
         <th scope="row"></th>
         <td><small><a href="javascript:void(0);" onclick="javascript:jQuery('.wp_plugin_dealersolutionsinventorysearch_advanced').fadeIn();jQuery('#wp_plugin_dealersolutionsinventorysearch_advanced\\.container').hide();">Advanced Options</a></small></td>
       </tr>
-      <?php } ?>
     </table>
     <table class="form-table wp_plugin_dealersolutionsinventorysearch_advanced" <?php if(get_option('wp_plugin_dealersolutionsinventorysearch_css_mode') == false and get_option('wp_plugin_dealersolutionsinventorysearch_css_mode') == false){?>style="display:none;"<?php } ?>>
       <tr valign="top">
@@ -353,18 +355,41 @@ if(isset($configuration_pagelist))
         </td>
       </tr>
     </table>
-    <table class="form-table wp_plugin_dealersolutionsinventorysearch_advanced" <?php if(get_option('wp_plugin_dealersolutionsinventorysearch_title_mode') == false and get_option('wp_plugin_dealersolutionsinventorysearch_title_mode') == false){?>style="display:none;"<?php } ?>>
+
+    <table class="form-table">
       <tr valign="top">
-        <th scope="row">Page Title Mode</th>
+        <th scope="row">Default Page Title Mode</th>
         <td>
-          <div><input type="radio" name="wp_plugin_dealersolutionsinventorysearch[title_mode]" id="wp_plugin_dealersolutionsinventorysearch_title_mode_0" value="0" <?php echo (get_option('wp_plugin_dealersolutionsinventorysearch_title_mode') == false) ? 'checked="true" data-was-original-value="true"':null;?> /> <label for="wp_plugin_dealersolutionsinventorysearch_title_mode_0">Ignore Title <span class="description">(default option)</span></label></div>
-          <div><input type="radio" name="wp_plugin_dealersolutionsinventorysearch[title_mode]" id="wp_plugin_dealersolutionsinventorysearch_title_mode_1" value="1" <?php echo (get_option('wp_plugin_dealersolutionsinventorysearch_title_mode') === '1')  ? 'checked="true" data-was-original-value="true"':null;?> /> <label for="wp_plugin_dealersolutionsinventorysearch_title_mode_1">Replace Title <span class="description">(partial replacement)</span></label></div>
-          <div><input type="radio" name="wp_plugin_dealersolutionsinventorysearch[title_mode]" id="wp_plugin_dealersolutionsinventorysearch_title_mode_4" value="4" <?php echo (get_option('wp_plugin_dealersolutionsinventorysearch_title_mode') === '4')  ? 'checked="true" data-was-original-value="true"':null;?> /> <label for="wp_plugin_dealersolutionsinventorysearch_title_mode_4">Replace Title <span class="description">(complete replacement)</span></label></div>
+          <div><input type="radio" name="wp_plugin_dealersolutionsinventorysearch[title_mode]" id="wp_plugin_dealersolutionsinventorysearch_title_mode_4" value="4" <?php echo (get_option('wp_plugin_dealersolutionsinventorysearch_title_mode') === '4')  ? 'checked="true" data-was-original-value="true"':null;?> /> <label for="wp_plugin_dealersolutionsinventorysearch_title_mode_4">Full Title Replacement <span class="description">(default option)</span></label></div>
+          <div><input type="radio" name="wp_plugin_dealersolutionsinventorysearch[title_mode]" id="wp_plugin_dealersolutionsinventorysearch_title_mode_1" value="1" <?php echo (get_option('wp_plugin_dealersolutionsinventorysearch_title_mode') === '1')  ? 'checked="true" data-was-original-value="true"':null;?> /> <label for="wp_plugin_dealersolutionsinventorysearch_title_mode_1">Partial Title Replacement</label></div>
           <div><input type="radio" name="wp_plugin_dealersolutionsinventorysearch[title_mode]" id="wp_plugin_dealersolutionsinventorysearch_title_mode_2" value="2" <?php echo (get_option('wp_plugin_dealersolutionsinventorysearch_title_mode') === '2')  ? 'checked="true" data-was-original-value="true"':null;?> /> <label for="wp_plugin_dealersolutionsinventorysearch_title_mode_2">Append Title</label></div>
           <div><input type="radio" name="wp_plugin_dealersolutionsinventorysearch[title_mode]" id="wp_plugin_dealersolutionsinventorysearch_title_mode_3" value="3" <?php echo (get_option('wp_plugin_dealersolutionsinventorysearch_title_mode') === '3')  ? 'checked="true" data-was-original-value="true"':null;?> /> <label for="wp_plugin_dealersolutionsinventorysearch_title_mode_3">Prepend Title</label></div>
+          <div><input type="radio" name="wp_plugin_dealersolutionsinventorysearch[title_mode]" id="wp_plugin_dealersolutionsinventorysearch_title_mode_0" value="0" <?php echo (get_option('wp_plugin_dealersolutionsinventorysearch_title_mode') == false) ? 'checked="true" data-was-original-value="true"':null;?> /> <label for="wp_plugin_dealersolutionsinventorysearch_title_mode_0">Ignore Title</label></div>
         </td>
       </tr>
     </table>
+
+    <?php foreach(wp_plugin_dealersolutionsinventorysearch_get_specific_page_list_configuration() as $key => $item){ ?>
+
+      <table class="form-table wp_plugin_dealersolutionsinventorysearch_advanced" <?php if(isset($item['title_mode']) === false or strlen($item['title_mode']) === 0){?>style="display:none;"<?php } ?>>
+        <tr valign="top">
+          <th scope="row"><?php echo $item['page_name'];?> Page Title Mode</th>
+          <td>
+            <input type="hidden" name="wp_plugin_dealersolutionsinventorysearch[page_specific_rules][<?php echo $key;?>][page_name]" value="<?php echo strtolower($item['page_name']);?>">
+            <select name="wp_plugin_dealersolutionsinventorysearch[page_specific_rules][<?php echo $key;?>][title_mode]"">
+              <option <?php echo ($item['title_mode'] === '')   ? 'selected="true" data-was-original-value="true"':null;?>value="">Default Behavor</option>
+              <option <?php echo ($item['title_mode'] === '4')  ? 'selected="true" data-was-original-value="true"':null;?> value="4">Full Title Replacement</option>
+              <option <?php echo ($item['title_mode'] === '1')  ? 'selected="true" data-was-original-value="true"':null;?> value="1">Partial Title Replacement</option>
+              <option <?php echo ($item['title_mode'] === '2')  ? 'selected="true" data-was-original-value="true"':null;?> value="2">Append Title</option>
+              <option <?php echo ($item['title_mode'] === '3')  ? 'selected="true" data-was-original-value="true"':null;?> value="3">Prepend Title</option>
+              <option <?php echo ($item['title_mode'] === '0')  ? 'selected="true" data-was-original-value="true"':null;?> value="0">Ignore Title</option>
+            </select>
+          </td>
+        </tr>
+      </table>
+
+    <?php } ?>
+
     <table class="form-table wp_plugin_dealersolutionsinventorysearch_advanced" <?php if(get_option('wp_plugin_dealersolutionsinventorysearch_legacy_url_redirect') == false and get_option('wp_plugin_dealersolutionsinventorysearch_legacy_url_redirect') == false){?>style="display:none;"<?php } ?>>
       <tr valign="top">
         <th scope="row">Legacy URL Redirects</th>
@@ -551,7 +576,12 @@ if(isset($configuration_pagelist))
   //<![CDATA[
     jQuery(function()
     {
-      jQuery('[data-was-original-value="true"]').next('label').prepend('&laquo; ');
+      if(jQuery('.wp_plugin_dealersolutionsinventorysearch_advanced').filter(":hidden").size() === 0)
+      {
+        jQuery('#wp_plugin_dealersolutionsinventorysearch_advanced\\.container').hide();
+      }
+      jQuery('[data-was-original-value="true"]:not(option)').next('label').prepend('&laquo; ');
+      jQuery('option[data-was-original-value="true"]').prepend('&raquo; ');
       jQuery('.wp_plugin_dealersolutionsinventorysearch_field_page_type').click(function()
       {
         if(jQuery(this).val() == '0')

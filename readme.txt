@@ -4,7 +4,7 @@ Donate link: http://www.dealersolutions.com.au/
 Tags: feeds
 Requires at least: 3.8
 Tested up to: 4.2.2
-Stable Tag: 1.0
+Stable Tag: 1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -87,7 +87,11 @@ Will be forthcoming once we've got somewhere to put them
 
 == Changelog ==
 
-- 1.0 ... First Release
+= 1.1 =
+* Introduced a mechanism to control how the title of the page displays
+
+= 1.0 =
+* First Release
 
 == Upgrade Notice ==
 
