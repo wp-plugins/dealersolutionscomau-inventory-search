@@ -1,7 +1,0 @@
-if /popup/ is on the URL line, the the following statement will be true
-
-  global $wp_plugin_dealersolutionsinventorysearch;
-  if(isset($wp_plugin_dealersolutionsinventorysearch) === true and isset($wp_plugin_dealersolutionsinventorysearch->configuration->proxy_layout->popup) === true)
-  {
-    echo 'popup mode on';
-  }
